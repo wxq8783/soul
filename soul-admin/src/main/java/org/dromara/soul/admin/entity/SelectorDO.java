@@ -74,6 +74,8 @@ public class SelectorDO extends BaseDO {
      */
     private Boolean continued;
 
+    private String handle;
+
     /**
      * build selectorDO.
      *
@@ -83,7 +85,7 @@ public class SelectorDO extends BaseDO {
     public static SelectorDO buildSelectorDO(final SelectorDTO selectorDTO) {
         if (selectorDTO != null) {
             SelectorDO selectorDO = new SelectorDO();
-            Timestamp currentTime = new Timestamp(new Date().getTime());
+            Timestamp currentTime = new Timestamp(System.currentTimeMillis());
             if (StringUtils.isEmpty(selectorDTO.getId())) {
                 selectorDO.setId(UUIDUtils.generateShortUuid());
                 selectorDO.setDateCreated(currentTime);
@@ -100,6 +102,7 @@ public class SelectorDO extends BaseDO {
             selectorDO.setLoged(selectorDTO.getLoged());
             selectorDO.setContinued(selectorDTO.getContinued());
             selectorDO.setDateUpdated(currentTime);
+            selectorDO.setHandle(selectorDTO.getHandle());
             return selectorDO;
         }
         return null;

@@ -20,14 +20,11 @@ package org.dromara.soul.web.filter;
 
 import org.apache.commons.lang3.StringUtils;
 import org.dromara.soul.common.constant.Constants;
-import org.dromara.soul.common.constant.DubboParamConstants;
 import org.dromara.soul.common.enums.HttpMethodEnum;
 import org.dromara.soul.common.enums.RpcTypeEnum;
 import org.dromara.soul.common.result.SoulResult;
-import org.dromara.soul.common.utils.ByteBuffUtils;
-import org.dromara.soul.common.utils.GSONUtils;
+import org.dromara.soul.common.utils.GsonUtils;
 import org.dromara.soul.web.request.RequestDTO;
-import org.springframework.core.io.buffer.DataBufferUtils;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.server.reactive.ServerHttpRequest;
 import org.springframework.http.server.reactive.ServerHttpResponse;
@@ -35,9 +32,7 @@ import org.springframework.web.server.ServerWebExchange;
 import org.springframework.web.server.WebFilterChain;
 import reactor.core.publisher.Mono;
 
-import java.util.Map;
 import java.util.Objects;
-import java.util.concurrent.atomic.AtomicReference;
 
 /**
  * this is http post param verify filter.
@@ -64,7 +59,7 @@ public class ParamWebFilter extends AbstractWebFilter {
         response.setStatusCode(HttpStatus.BAD_REQUEST);
         final SoulResult result = SoulResult.error("you param is error please check with doc!");
         return response.writeWith(Mono.just(response.bufferFactory()
-                .wrap(GSONUtils.getInstance().toJson(result).getBytes())));
+                .wrap(GsonUtils.getInstance().toJson(result).getBytes())));
     }
 
     private Boolean verify(final RequestDTO requestDTO, final ServerWebExchange exchange) {
@@ -74,25 +69,13 @@ public class ParamWebFilter extends AbstractWebFilter {
             return false;
         }
         final RpcTypeEnum rpcTypeEnum = RpcTypeEnum.acquireByName(requestDTO.getRpcType());
-
         if (Objects.isNull(rpcTypeEnum)) {
             return false;
         }
-        //如果是dubbo的话
+        //if rpcType is dubbo
         if (Objects.equals(rpcTypeEnum.getName(), RpcTypeEnum.DUBBO.getName())) {
-            AtomicReference<String> json = new AtomicReference<>("");
-            DataBufferUtils.join(exchange.getRequest().getBody()).map(dataBuffer -> {
-                json.set(ByteBuffUtils.byteBufferToString(dataBuffer.asByteBuffer()));
-                return Mono.empty();
-            }).subscribe();
-            final Map<String, Object> paramMap = GSONUtils.getInstance().toObjectMap(json.get());
-            if (paramMap.containsKey(DubboParamConstants.INTERFACE_NAME)
-                    && paramMap.containsKey(DubboParamConstants.METHOD)) {
-                exchange.getAttributes().put(Constants.DUBBO_RPC_PARAMS, paramMap);
-                return true;
-            } else {
-                return false;
-            }
+            final Object param = exchange.getAttributes().get(Constants.DUBBO_PARAMS);
+            return !Objects.isNull(param);
         } else {
             return !StringUtils.isBlank(requestDTO.getHttpMethod())
                     && !Objects.isNull(HttpMethodEnum.acquireByName(requestDTO.getHttpMethod()));

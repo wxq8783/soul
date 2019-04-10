@@ -34,17 +34,14 @@ public class DubboTestServiceImpl implements DubboTestService {
 
     @Override
     public DubboTest findById(String id) {
-        DubboTest DubboTest = new DubboTest();
-        DubboTest.setName("hhah");
-        return DubboTest;
+        DubboTest dubboTest = new DubboTest();
+        dubboTest.setName("hhah");
+        return dubboTest;
     }
 
     @Override
     public DubboTest insert(DubboTest dubboTest) {
-        DubboTest test = new DubboTest();
-        test.setId("2");
-        test.setName("myth");
-        return test;
+        return dubboTest;
     }
 
     @Override

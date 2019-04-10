@@ -21,6 +21,7 @@ package org.dromara.soul.web.config;
 import org.dromara.soul.web.cache.UpstreamCacheManager;
 import org.dromara.soul.web.cache.ZookeeperCacheManager;
 import org.dromara.soul.web.disruptor.publisher.SoulEventPublisher;
+import org.dromara.soul.web.filter.BodyWebFilter;
 import org.dromara.soul.web.filter.ParamWebFilter;
 import org.dromara.soul.web.filter.TimeWebFilter;
 import org.dromara.soul.web.handler.SoulHandlerMapping;
@@ -31,12 +32,16 @@ import org.dromara.soul.web.plugin.after.ResponsePlugin;
 import org.dromara.soul.web.plugin.before.GlobalPlugin;
 import org.dromara.soul.web.plugin.before.SignPlugin;
 import org.dromara.soul.web.plugin.before.WafPlugin;
+import org.dromara.soul.web.plugin.dubbo.GenericParamService;
+import org.dromara.soul.web.plugin.dubbo.GenericParamServiceImpl;
 import org.dromara.soul.web.plugin.function.DividePlugin;
 import org.dromara.soul.web.plugin.function.RateLimiterPlugin;
 import org.dromara.soul.web.plugin.function.RewritePlugin;
 import org.dromara.soul.web.plugin.ratelimter.RedisRateLimiter;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
+import org.springframework.boot.autoconfigure.condition.SearchStrategy;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
@@ -69,6 +74,7 @@ public class SoulConfiguration {
      * @param zookeeperCacheManager the zookeeper cache manager
      * @param soulEventPublisher    the soul event publisher
      * @param redisRateLimiter      the redis rate limiter
+     * @param upstreamCacheManager  the upstream cache manager
      */
     @Autowired(required = false)
     public SoulConfiguration(final ZookeeperCacheManager zookeeperCacheManager,
@@ -193,6 +199,17 @@ public class SoulConfiguration {
     }
 
     /**
+     * Body web filter web filter.
+     *
+     * @return the web filter
+     */
+    @Bean
+    @Order(-1)
+    public WebFilter bodyWebFilter() {
+        return new BodyWebFilter();
+    }
+
+    /**
      * init param web filter.
      *
      * @return {@linkplain ParamWebFilter}
@@ -213,5 +230,16 @@ public class SoulConfiguration {
     @ConditionalOnProperty(name = "soul.timeVerify.enabled", matchIfMissing = true)
     public WebFilter timeWebFilter() {
         return new TimeWebFilter();
+    }
+
+    /**
+     * Generic param service generic param service.
+     *
+     * @return the generic param service
+     */
+    @Bean
+    @ConditionalOnMissingBean(value = GenericParamService.class, search = SearchStrategy.ALL)
+    public GenericParamService genericParamService() {
+        return new GenericParamServiceImpl();
     }
 }
