@@ -3,7 +3,6 @@
 [![Codacy Badge](https://api.codacy.com/project/badge/Grade/4367ffad5b434b7e8078b3a68cc6398d)](https://www.codacy.com/app/yu199195/soul?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=Dromara/soul&amp;utm_campaign=Badge_Grade)
 [![Total lines](https://tokei.rs/b1/github/Dromara/soul?category=lines)](https://github.com/Dromara/soul)
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg?label=license)](https://github.com/Dromara/soul/blob/master/LICENSE)
-[![Build Status](https://travis-ci.org/Dromara/soul.svg?branch=master)](https://travis-ci.org/Dromara/soul)
 [![Maven Central](https://img.shields.io/maven-central/v/org.dromara/soul.svg?label=maven%20central)](http://search.maven.org/#search%7Cga%7C1%7Cg%3A%22org.dromara%22%20AND%soul)
 [![QQ群](https://img.shields.io/badge/chat-on%20QQ-ff69b4.svg?style=flat-square)](https://shang.qq.com/wpa/qunwpa?idkey=03bbb6f74b3257989316c0a8cf07cec117314dbdfe4fa7a20870b298b7db2c3b)
 
@@ -75,17 +74,17 @@
   The selector and the rule match only once, and the match is returned. So the coarsest granularity should be sorted last.
    
   
-# Data Caching 
+# Data Caching  & Data Sync
  
-  All data is cached HashMap in the JVM So it's very fast.
+  All data is cached ConcurrentHashMap in the JVM So it's very fast.
   
   When the user is managing changes in the background,
   
-  Soul dynamically updates the cache by listening to the zookeeper node.
+  Soul dynamically updates the cache by listening to the zookeeper node, websocket push,http longPull.
   
-  This solution might rely on zookeeper,It may be replaced in the future [issues](https://github.com/Dromara/soul/issues/35)
+  ![Data Sync](https://bestkobe.gitee.io/images/soul/soul-config-processor.png?_t=201908032316)
   
-  Node design for zookeeper [zookeeper-node](https://dromara.org/website/zh-cn/docs/soul/config.html)
+  ![Sync Flow](https://bestkobe.gitee.io/images/soul/config-strage-processor.png?_t=201908032339)
  
 # Quick Start
  * get `soul-admin.jar`
@@ -96,8 +95,8 @@
 
 * start `soul-admin.jar`
 ```java
-java -jar soul-admin.jar -Dspring.datasource.url="your mysql url"  
--Dspring.datasource.username='you username'  -Dspring.datasource.password='you password'
+java -jar soul-admin.jar --spring.datasource.url="your mysql url"  
+--spring.datasource.username='you username'  --spring.datasource.password='you password'
 ```
 * visit : http://localhost:8887/index.html  username:admin  password :123456
 
