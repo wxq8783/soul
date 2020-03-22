@@ -21,7 +21,6 @@ package org.dromara.soul.web.filter;
 import org.apache.commons.lang3.StringUtils;
 import org.dromara.soul.common.constant.Constants;
 import org.dromara.soul.common.utils.DateUtils;
-import org.dromara.soul.common.utils.GsonUtils;
 import org.dromara.soul.web.config.SoulConfig;
 import org.dromara.soul.web.request.RequestDTO;
 import org.dromara.soul.web.result.SoulResultEnum;
@@ -52,10 +51,10 @@ public class TimeWebFilter extends AbstractWebFilter {
     @Override
     protected Mono<Boolean> doFilter(final ServerWebExchange exchange, final WebFilterChain chain) {
         final RequestDTO requestDTO = exchange.getAttribute(Constants.REQUESTDTO);
-        if (Objects.isNull(requestDTO) || StringUtils.isBlank(requestDTO.getTimestamp())) {
+        if (Objects.isNull(requestDTO) || Objects.isNull(requestDTO.getStartDateTime())) {
             return Mono.just(false);
         }
-        final LocalDateTime start = DateUtils.parseLocalDateTime(requestDTO.getTimestamp());
+        final LocalDateTime start = requestDTO.getStartDateTime();
         final LocalDateTime now = LocalDateTime.now();
         final long between = DateUtils.acquireMinutesBetween(start, now);
         if (between < soulConfig.getFilterTime()) {

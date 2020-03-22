@@ -31,6 +31,8 @@
  
  * soul-web : Core processing packages include plug-ins, request routing and forwarding, and so on
  
+ * soul-client : User fast access, automatic new metadata, rule selector
+ 
  * soul-extend-demo : Demo of the extension point
  
  * soul-test : the rpc test project
@@ -95,10 +97,10 @@
 
 * start `soul-admin.jar`
 ```java
-java -jar soul-admin.jar --spring.datasource.url="your mysql url"  
---spring.datasource.username='you username'  --spring.datasource.password='you password'
+> java -jar soul-admin.jar --spring.datasource.url="jdbc:mysql://your ip:3306/soul?useUnicode=true&characterEncoding=utf-8&zeroDateTimeBehavior=CONVERT_TO_NULL&failOverReadOnly=false&autoReconnect=true&useSSL=false"  
+  --spring.datasource.username="you username"  --spring.datasource.password="you password"
 ```
-* visit : http://localhost:8887/index.html  username:admin  password :123456
+* visit : http://localhost:9095/index.html  username:admin  password :123456
 
 * get `soul-bootstrap.jar`
 
@@ -140,9 +142,87 @@ java -jar soul-admin.jar --spring.datasource.url="your mysql url"
 
 * [plugins](http://www.iqiyi.com/w_19s651zyo9.html)
 
+# Known Users
+
+按照登记顺序排序，更多接入公司，欢迎在[https://github.com/Dromara/soul/issues/68](https://github.com/Dromara/soul/issues/68)登记（仅供开源用户参考）
+
+
+<table>
+  <thead>
+    <th>广州思埠集团有限公司</th>
+    <th>上海凯京信达科技集团有限公司</th>
+    <th>上海彩贝壳科技有限公司</th>
+    <th>江苏永钢集团有限公司</th>
+  </thead>
+  <tbody>
+    <tr>
+      <td><img src="https://yu199195.github.io/images/soul/users/sibu.jpg"  width="1800" height="90" alt="思埠集团"/>
+      <td><img src="https://yu199195.github.io/images/soul/users/keking.png"  width="1800" height="90" alt="凯京集团"/>
+      <td><img src="https://yu199195.github.io/images/soul/users/caibeike.png"  width="1800" height="90" alt="彩贝壳"/>
+      <td><img src="https://yu199195.github.io/images/soul/users/jiangsuyonggang.jpg"  width="1800" height="90" alt="江苏永钢集团"/>
+    </tr>
+  </tbody>
+  <thead>
+      <th>上海方付通科技有限公司 </th>
+      <th>上海理想信息产业集团有限公司</th>
+      <th>北京开普云科技有限公司</th>
+      <th>武汉颂大教育科技股份有限公司</th>
+   </thead>
+   <tbody>
+       <tr>
+         <td><img src="https://yu199195.github.io/images/soul/users/fangfutong.png"  width="1800" height="90" alt="上海方付通科技有限公司"/>
+         <td><img src="https://yu199195.github.io/images/soul/users/lixiang.jpg"  width="1800" height="90" alt="上海理想信息产业集团有限公司"/>
+         <td><img src="https://yu199195.github.io/images/soul/users/kaipuyun.png"  width="1800" height="90" alt="彩贝壳"/>
+         <td><img src="https://yu199195.github.io/images/soul/users/songda.png"  width="1800" height="90" alt="江苏永钢集团"/>
+       </tr>
+    </tbody>
+    <thead>
+          <th>浙江翱游科技有限公司 </th>
+          <th>车易拍(北京)汽车技术服务有限公司</th>
+          <th>上海草帽科技</th>
+          <th>深圳竹云科技有限公司</th>
+    </thead>
+    <tbody>
+           <tr>
+             <td><img src="https://yu199195.github.io/images/soul/users/aoyou.jpg"  width="1800" height="90" alt="浙江翱游科技有限公司"/>
+             <td><img src="https://yu199195.github.io/images/soul/users/cheyipai.jpg"  width="1800" height="90" alt="车易拍(北京)汽车技术服务有限公司"/>
+             <td><img src="https://yu199195.github.io/images/soul/users/caomao.jpg"  width="1800" height="90" alt="上海草帽科技"/>
+             <td><img src="https://yu199195.github.io/images/soul/users/zuyun.jpg"  width="1800" height="90" alt="深圳竹云科技有限公司"/>
+           </tr>
+     </tbody>
+     <thead>
+               <th>深圳盒知科技 </th>
+               <th>杭州奇点云科技</th>
+               <th>深圳万威科技</th>
+               <th>武汉物易云通网络科技有限公司</th>
+      </thead>
+      <tbody>
+                <tr>
+                  <td><img src="https://yu199195.github.io/images/soul/users/hezhi.png"  width="1800" height="90" alt="深圳盒知科技"/>
+                  <td><img src="https://yu199195.github.io/images/soul/users/qidianyun.jpg"  width="1800" height="90" alt="杭州奇点云科技"/>
+                  <td><img src="https://yu199195.github.io/images/soul/users/wanwei.gif"  width="1800" height="90" alt="万威科技"/>
+                  <td><img src="https://yu199195.github.io/images/soul/users/wuyiyuntong.jpg"  width="1800" height="90" alt="武汉物易云通网络科技有限公司"/>
+                </tr>
+      </tbody>
+</table>
+
+
 # Support  
 
- [![芋道源码](http://www.iocoder.cn/images/common/erweima.jpg)](http://www.iocoder.cn/?from=soul) ![](https://yu199195.github.io/images/public.jpg)  ![](https://yu199195.github.io/images/soul-qq.png)   [![JetBrains](https://yu199195.github.io/images/jetbrains.svg)](https://www.jetbrains.com/?from=soul)
+<table>
+  <thead>
+    <th>微信公众号</th>
+    <th>QQ交流群</th>
+    <th>芋道源码</th>
+  </thead>
+  <tbody>
+    <tr>
+      <td><img src="https://yu199195.github.io/images/public.jpg"   alt="微信公众号"/>
+      <td><img src="https://yu199195.github.io/images/soul-qq.png"  alt="QQ交流群"/>
+      <td><img src="http://www.iocoder.cn/images/common/erweima.jpg"  alt="芋道源码"/>
+    </tr>
+  </tbody>
+</table>
   
  
  

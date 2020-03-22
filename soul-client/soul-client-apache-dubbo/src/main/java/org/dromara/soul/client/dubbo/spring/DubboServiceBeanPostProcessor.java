@@ -2,13 +2,13 @@ package org.dromara.soul.client.dubbo.spring;
 
 import lombok.extern.slf4j.Slf4j;
 import org.apache.dubbo.config.spring.ServiceBean;
-import org.apache.dubbo.config.spring.context.event.ServiceBeanExportedEvent;
+import org.dromara.soul.client.common.annotation.SoulClient;
 import org.dromara.soul.client.common.dto.MetaDataDTO;
 import org.dromara.soul.client.common.utils.OkHttpTools;
-import org.dromara.soul.client.common.annotation.SoulClient;
 import org.dromara.soul.client.dubbo.config.DubboConfig;
-import org.springframework.context.ApplicationEvent;
-import org.springframework.context.ApplicationListener;
+import org.springframework.beans.BeansException;
+import org.springframework.beans.factory.config.BeanPostProcessor;
+import org.springframework.util.ClassUtils;
 import org.springframework.util.ReflectionUtils;
 
 import java.io.IOException;
@@ -25,7 +25,7 @@ import java.util.stream.Collectors;
  * @author xiaoyu
  */
 @Slf4j
-public class DubboListener implements ApplicationListener {
+public class DubboServiceBeanPostProcessor implements BeanPostProcessor {
 
     private DubboConfig dubboConfig;
 
@@ -33,21 +33,30 @@ public class DubboListener implements ApplicationListener {
 
     private final String url;
 
-    public DubboListener(final DubboConfig dubboConfig) {
+    public DubboServiceBeanPostProcessor(final DubboConfig dubboConfig) {
         this.dubboConfig = dubboConfig;
         url = dubboConfig.getAdminUrl() + "/meta-data/register";
     }
 
     @Override
-    public void onApplicationEvent(final ApplicationEvent event) {
-        if (event instanceof ServiceBeanExportedEvent) {
-            executorService.execute(() -> handler((ServiceBeanExportedEvent) event));
+    public Object postProcessAfterInitialization(final Object bean, final String beanName) throws BeansException {
+        if (bean instanceof ServiceBean) {
+            executorService.execute(() -> handler((ServiceBean) bean));
         }
+        return bean;
     }
 
-    private void handler(final ServiceBeanExportedEvent event) {
-        ServiceBean serviceBean = event.getServiceBean();
+    private void handler(final ServiceBean serviceBean) {
         Class<?> clazz = serviceBean.getRef().getClass();
+        if (ClassUtils.isCglibProxyClass(clazz)) {
+            String superClassName = clazz.getGenericSuperclass().getTypeName();
+            try {
+                clazz = Class.forName(superClassName);
+            } catch (ClassNotFoundException e) {
+                log.error(String.format("class not found: %s", superClassName));
+                return;
+            }
+        }
         final Method[] methods = ReflectionUtils.getUniqueDeclaredMethods(clazz);
         for (Method method : methods) {
             SoulClient soulClient = method.getAnnotation(SoulClient.class);

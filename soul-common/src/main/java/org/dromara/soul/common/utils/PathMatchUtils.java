@@ -17,23 +17,39 @@
  *
  */
 
-package org.dromara.soul.test.dubbo.service.service;
+package org.dromara.soul.common.utils;
 
-import org.apache.dubbo.config.spring.ServiceBean;
-import org.springframework.beans.BeansException;
-import org.springframework.beans.factory.config.BeanPostProcessor;
-import org.springframework.stereotype.Component;
+import org.springframework.util.AntPathMatcher;
 
 /**
+ * The type Path match utils.
+ *
  * @author xiaoyu
  */
-@Component
-public class ServiceBeanPostProcessor implements BeanPostProcessor {
-    @Override
-    public Object postProcessAfterInitialization(final Object bean, final String beanName) throws BeansException {
-        if (bean instanceof ServiceBean) {
-            ((ServiceBean) bean).setDynamic(Boolean.TRUE);
+public class PathMatchUtils {
+
+    private static final AntPathMatcher MATCHER = new AntPathMatcher();
+
+    /**
+     * Match boolean.
+     *
+     * @param matchUrls the ignore urls
+     * @param path      the path
+     * @return the boolean
+     */
+    public static boolean match(final String matchUrls, final String path) {
+        String[] urlList = matchUrls.split(",");
+        for (String pattern : urlList) {
+            boolean match = reg(pattern, path);
+            if (match) {
+                return true;
+            }
         }
-        return bean;
+        return false;
     }
+
+    private static boolean reg(final String pattern, final String path) {
+        return MATCHER.match(pattern, path);
+    }
+
 }

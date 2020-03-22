@@ -24,6 +24,7 @@ import org.dromara.soul.common.dto.PluginData;
 import org.dromara.soul.common.dto.RuleData;
 import org.dromara.soul.common.dto.SelectorData;
 import org.dromara.soul.common.enums.PluginEnum;
+import org.dromara.soul.web.plugin.hystrix.HystrixRefreshHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -110,6 +111,7 @@ class HttpCacheHandler extends AbstractLocalCacheManager {
             LOGGER.info("clear all rule cache, old cache:{}", RULE_MAP);
             RULE_MAP.clear();
         } else {
+            HystrixRefreshHandler.INS.refreshHystrix(ruleDataList);
             // group by selectorId, then sort by sort value
             Map<String, List<RuleData>> selectorToRules = ruleDataList.stream()
                     .collect(Collectors.groupingBy(RuleData::getSelectorId));

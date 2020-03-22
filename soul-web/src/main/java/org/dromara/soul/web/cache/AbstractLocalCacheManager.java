@@ -24,6 +24,7 @@ import org.dromara.soul.common.dto.PluginData;
 import org.dromara.soul.common.dto.RuleData;
 import org.dromara.soul.common.dto.SelectorData;
 import org.dromara.soul.common.enums.RpcTypeEnum;
+import org.dromara.soul.common.utils.PathMatchUtils;
 import org.dromara.soul.web.plugin.config.PluginConfigHandler;
 import org.dromara.soul.web.plugin.dubbo.ApplicationConfigCache;
 
@@ -117,13 +118,18 @@ public abstract class AbstractLocalCacheManager implements LocalCacheManager {
     }
 
     /**
-     * Find path meta data.
+     * Find  meta data by uri.
      *
-     * @param path the path
+     * @param uri the uri
      * @return the meta data
      */
-    public static MetaData findPath(final String path) {
-        return META_DATA.get(path);
+    public static MetaData findByUri(final String uri) {
+        MetaData metaData = META_DATA.get(uri);
+        if (Objects.isNull(metaData)) {
+            String key = META_DATA.keySet().stream().filter(k -> PathMatchUtils.match(k, uri)).findFirst().orElse("");
+            return META_DATA.get(key);
+        }
+        return metaData;
     }
 
     /**
